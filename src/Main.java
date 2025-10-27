@@ -1,0 +1,36 @@
+public class Main {
+    public static void main(String[] args) {
+
+        ComplexTaskExecutor taskExecutor = new ComplexTaskExecutor(5);
+
+        Runnable testRunnable = () -> {
+            System.out.println(Thread.currentThread().getName() + " start test");
+
+            taskExecutor.executeTasks(5);
+
+            System.out.println(Thread.currentThread().getName() + " completed test");
+        };
+
+        Thread thread1 = new Thread(testRunnable, "TestThread-1");
+        Thread thread2 = new Thread(testRunnable, "TestThread-2");
+
+        thread1.start();
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("All test completed");
+    }
+}
